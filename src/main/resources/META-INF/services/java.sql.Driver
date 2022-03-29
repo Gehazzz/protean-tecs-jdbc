@@ -1,0 +1,3 @@
+com.protean.tecs.jdbc.ProteanTecsJdbcDriver
+com.mysql.cj.jdbc.Driver
+com.vertica.jdbc.Driver
