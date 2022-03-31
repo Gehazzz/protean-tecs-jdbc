@@ -29,8 +29,8 @@ public class Test {
         try {
             //jdbc:proteantecs://localhost:3306/devdb
             //Driver driver = (Driver) Class.forName("com.protean.tecs.jdbc.ProteanTecsJdbcDriver").newInstance();
-            //Connection conn = DriverManager.getConnection("jdbc:proteantecs://localhost:5433/docker", "dbadmin", "");
-            Connection conn = DriverManager.getConnection("jdbc:proteantecs://localhost:3306/devdb", "root", "root");
+            Connection conn = DriverManager.getConnection("jdbc:proteantecs://localhost:5433/VMart", "dbadmin", "");
+            //Connection conn = DriverManager.getConnection("jdbc:proteantecs://localhost:3306/devdb", "root", "root");
          /*   conn.createStatement().execute("select * from failedpn");
 
             ResultSet schemas = conn.getMetaData().getCatalogs();
@@ -52,14 +52,36 @@ public class Test {
             modified.beforeFirst();*/
             //conn.createStatement().execute("INSERT INTO failedpn (metric_date, metric_hour, game_id, game_id_str, user_id, event_ts, bundle_id, mkt, mkt_str, device_token) VALUES (20171103, 2017110301, 23, 'niso', 1, '2017-11-03 00:01:01', 'bundle-1', 1, 'apple', 'abcdef');");
 
-            PreparedStatement preparedStatement = conn.prepareStatement("select * from failedpn");
+/*            conn.createStatement().execute("CREATE schema bi_pipeline;\n" +
+                    "\n" +
+                    "CREATE TABLE bi_pipeline.failedpn\n" +
+                    "(\n" +
+                    "    metric_date int NOT NULL,\n" +
+                    "    metric_hour int,\n" +
+                    "    game_id int,\n" +
+                    "    game_id_str varchar(32),\n" +
+                    "    user_id int,\n" +
+                    "    event_ts timestamp,\n" +
+                    "    bundle_id varchar(32),\n" +
+                    "    mkt int,\n" +
+                    "    mkt_str varchar(100),\n" +
+                    "    device_token varchar(1000)\n" +
+                    ")\n" +
+                    "PARTITION BY (failedpn.metric_date);\n" +
+                    "\n" +
+                    "INSERT INTO bi_pipeline.failedpn (metric_date, metric_hour, game_id, game_id_str, user_id, event_ts, bundle_id, mkt, mkt_str, device_token) VALUES (20171103, 2017110301, 23, 'niso', 1, '2017-11-03 00:01:01', 'bundle-1', 1, 'apple', 'abcdef');");*/
+
+            PreparedStatement preparedStatement = conn.prepareStatement("select * from bi_pipeline.failedpn");
             ResultSetMetaData metaData = preparedStatement.getMetaData();
             //ResultSet resultSet = preparedStatement.executeQuery();
             System.out.println(metaData);
             //client.getColumnsToHide(resultSetToDto(modified, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            /*conn.getMetaData().getColumns("devdb", null, "failedpn", "%");
-            client.sendLog("log from main");
-            conn.getMetaData().getTables("devdb", null, null, new String[]{"LOCAL TEMPORARY", "TABLE", "VIEW"});*/
+            //conn.getMetaData().getColumns("VMart", "bi_pipeline", "failedpn", "%");
+            //client.sendLog("log from main");
+            //conn.getMetaData().getTables("VMart", null, null, new String[]{"LOCAL TEMPORARY", "TABLE", "VIEW"});
+            //ResultSet resultSet = conn.getMetaData().getTables("VMart", "bi_pipeline", null, new String[]{"LOCAL TEMPORARY", "TABLE", "VIEW"});
+            ResultSet resultSet = conn.getMetaData().getColumns("VMart", "bi_pipeline", "failedpn", "%");
+            System.out.println(resultSetToString(resultSet));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

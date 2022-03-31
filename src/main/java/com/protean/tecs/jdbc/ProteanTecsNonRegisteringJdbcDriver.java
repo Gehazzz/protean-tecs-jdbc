@@ -39,12 +39,13 @@ public class ProteanTecsNonRegisteringJdbcDriver implements Driver, Closeable {
             e.printStackTrace();
         }
         if (!acceptsURL(url)) return null;
-        //String newUrl = url.replace(DRIVER_URL_START, "jdbc:vertica:");
-        String newUrl = url.replace(DRIVER_URL_START, "jdbc:mysql:");
+        String newUrl = url.replace(DRIVER_URL_START, "jdbc:vertica:");
+        //String newUrl = url.replace(DRIVER_URL_START, "jdbc:mysql:");
 
         Connection connection = DriverManager.getDriver(newUrl).connect(newUrl, info);
         //DriverManager.getConnection(newUrl, info);
-        return new ProteanTecsJdbcConnection(connection, "mysql", client);
+        return new ProteanTecsJdbcConnection(connection, "vertica", client);
+        //return new ProteanTecsJdbcConnection(connection, "mysql", client);
     }
 
     @Override

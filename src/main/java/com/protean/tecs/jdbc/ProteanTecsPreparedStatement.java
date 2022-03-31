@@ -200,7 +200,8 @@ public class ProteanTecsPreparedStatement implements PreparedStatement {
         if (approveForQuery.isApproved()) {
             return preparedStatement.getMetaData();
         } else {
-            return new ProteanTechsErrorResultSetMetaData(approveForQuery.getMessage());
+            //return new ProteanTechsErrorResultSetMetaData(approveForQuery.getMessage());
+            throw new RuntimeException(approveForQuery.getMessage());
         }
     }
 

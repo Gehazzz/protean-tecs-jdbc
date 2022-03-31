@@ -648,19 +648,21 @@ public class ProteanTecsDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
         client.sendLog("catalog: " + catalog + ", " + "schemaPattern: " + schemaPattern + ", " + "tableNamePattern: " + tableNamePattern + ", " + "types: " + Arrays.toString(types));
         ResultSet tables = databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types);
-        ResultSetData resultSetData = resultSetMapping.resultSetToDto(tables);
+        CachedRowSet cachedTables = new CachedRowSetImpl();
+        cachedTables.populate(tables);
+        ResultSetData resultSetData = resultSetMapping.resultSetToDto(cachedTables);
         TablesToHide tablesToHide = client.getTablesToHide(resultSetData, db);
-        CachedRowSet tablesResult = new CachedRowSetImpl();
-        tablesResult.populate(tables);
-        resultSetModification.hide(tablesResult, tablesToHide.getHiddenTables());
-        return tablesResult;
+        resultSetModification.hide(cachedTables, tablesToHide.getHiddenTables());
+        return cachedTables;
     }
 
     @Override
     public ResultSet getSchemas() throws SQLException {
         ResultSet schemas = databaseMetaData.getSchemas();
-        client.sendQuery(client.resultSetToString(schemas));
-        return schemas;
+        CachedRowSet schemasResult = new CachedRowSetImpl();
+        schemasResult.populate(schemas);
+        client.sendQuery(client.resultSetToString(schemasResult));
+        return schemasResult;
     }
 
     @Override
@@ -673,8 +675,10 @@ public class ProteanTecsDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getTableTypes() throws SQLException {
         ResultSet tableTypes = databaseMetaData.getTableTypes();
-        client.sendQuery(client.resultSetToString(tableTypes));
-        return tableTypes;
+        CachedRowSet tableTypesCached = new CachedRowSetImpl();
+        tableTypesCached.populate(tableTypes);
+        client.sendQuery(client.resultSetToString(tableTypesCached));
+        return tableTypesCached;
     }
 
     @Override
@@ -682,12 +686,12 @@ public class ProteanTecsDatabaseMetaData implements DatabaseMetaData {
     public ResultSet getColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
         client.sendLog("catalog: " + catalog + ", " + "schemaPattern: " + schemaPattern + ", " + "tableNamePattern: " + tableNamePattern + ", " + "columnNamePattern: " + columnNamePattern);
         ResultSet columns = databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
-        ResultSetData resultSetData = resultSetMapping.resultSetToDto(columns);
+        CachedRowSet cachedColumns = new CachedRowSetImpl();
+        cachedColumns.populate(columns);
+        ResultSetData resultSetData = resultSetMapping.resultSetToDto(cachedColumns);
         ColumnsToHide columnsToHide = client.getColumnsToHide(resultSetData, db);
-        CachedRowSet columnsResult = new CachedRowSetImpl();
-        columnsResult.populate(columns);
-        resultSetModification.hide(columnsResult, columnsToHide.getHiddenColumns());
-        return columnsResult;
+        resultSetModification.hide(cachedColumns, columnsToHide.getHiddenColumns());
+        return cachedColumns;
     }
 
     @Override
@@ -927,8 +931,10 @@ public class ProteanTecsDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
         ResultSet schemas = databaseMetaData.getSchemas(catalog, schemaPattern);
-        client.sendQuery(client.resultSetToString(schemas));
-        return schemas;
+        CachedRowSet schemasResult = new CachedRowSetImpl();
+        schemasResult.populate(schemas);
+        client.sendQuery(client.resultSetToString(schemasResult));
+        return schemasResult;
     }
 
     @Override
