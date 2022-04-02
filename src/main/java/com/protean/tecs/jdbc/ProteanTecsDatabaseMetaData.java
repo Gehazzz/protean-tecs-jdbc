@@ -668,8 +668,10 @@ public class ProteanTecsDatabaseMetaData implements DatabaseMetaData {
     @Override
     public ResultSet getCatalogs() throws SQLException {
         ResultSet catalogs = databaseMetaData.getCatalogs();
-        client.sendQuery(client.resultSetToString(catalogs));
-        return catalogs;
+        CachedRowSet catalogsResult = new CachedRowSetImpl();
+        catalogsResult.populate(catalogs);
+        client.sendQuery(client.resultSetToString(catalogsResult));
+        return catalogsResult;
     }
 
     @Override
